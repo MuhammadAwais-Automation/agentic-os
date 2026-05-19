@@ -1,0 +1,31 @@
+
+> agentic-os@1.0.0 dev
+> node scripts/clean-dev-cache.js && concurrently --kill-others-on-fail "npm run dev --workspace=apps/bridge" "npm run dev --workspace=apps/dashboard"
+
+[clean] removed apps/dashboard/.next
+[1] 
+[1] > @agentic-os/dashboard@1.0.0 dev
+[1] > next dev -p 3000
+[1] 
+[0] 
+[0] > @agentic-os/bridge@1.0.0 dev
+[0] > ts-node-dev --respawn --transpile-only src/index.ts
+[0] 
+[0] [INFO] 07:20:34 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+[1]    ▲ Next.js 14.1.0
+[1]    - Local:        http://localhost:3000
+[1] 
+[0] [bridge] SQLite ready
+[0] [bridge] Listening on http://localhost:3001
+[1]  ✓ Ready in 15.4s
+[1]  ○ Compiling / ...
+[1]  ✓ Compiled /coding in 36.1s (2380 modules)
+[1]  ○ Compiling /setup ...
+[1]  ✓ Compiled /setup in 917ms (2386 modules)
+[1]  ✓ Compiled /catalog in 495ms (2401 modules)
+[1]  ○ Compiling /sessions ...
+[1]  ✓ Compiled /sessions in 745ms (2410 modules)
+[1]  ○ Compiling /home ...
+[1]  ✓ Compiled /home in 8.9s (3027 modules)
+[1]  ○ Compiling /memory ...
+[1]  ✓ Compiled /memory in 76.6s (3035 modules)

@@ -1,0 +1,1109 @@
+# Agentic OS Advanced Command Center Plan
+
+Date: 2026-05-18  
+Project: `E:\Dashboard OS\agentic-os`  
+Purpose: Agentic OS ko simple prompt dashboard se full advanced vibe-coding command center banana.
+
+## 1. Executive Summary
+
+Hamare current Agentic OS ka foundation strong hai: Next.js dashboard, Express bridge, SQLite DB, Claude/Codex session ingestion, Graphify output, dream engine, aur basic coding prompt runner already present hain. Lekin `Coding` section abhi full coding OS nahi hai. Abhi yeh sirf project path input, graphify status, aur Claude one-shot prompt runner hai.
+
+Target direction:
+
+- Home = AI usage/intelligence overview
+- Coding = browser-based command center
+- Graphify = project brain map
+- Sessions = searchable Claude/Codex history
+- Skills = ECC/custom capability library
+- Agents = worker roster
+- MCP = external tool/connectors manager
+- Memory = Obsidian/local/project knowledge layer
+- Dream = daily self-improvement engine
+
+Short version: dashboard ko “AI usage tracker” se “personal AI development operating system” banana hai.
+
+## 2. Current Codebase Findings
+
+### 2.1 Stack
+
+- Frontend: Next.js 14, React, Recharts, D3, xterm dependency installed.
+- Backend bridge: Express, WebSocket, better-sqlite3, node-cron, node-pty dependency installed.
+- DB: `config/agentic-os.db`
+- App workspaces:
+  - `apps/dashboard`
+  - `apps/bridge`
+
+### 2.2 Current Coding Page
+
+File: `apps/dashboard/src/app/coding/page.tsx`
+
+Current features:
+
+- Project path input
+- Graphify check/load
+- Claude prompt textarea
+- Output area
+- Stop button
+
+Current flow:
+
+1. User enters project path.
+2. `LOAD` calls:
+   - `/api/graphify/check`
+   - `/api/graphify/graph`
+3. Prompt runner opens `/ws/claude`.
+4. Backend runs `claude --print <prompt>`.
+5. stdout/stderr stream into one output box.
+
+### 2.3 Claude Runner Limitation
+
+File: `apps/bridge/src/ws/claude.ts`
+
+Current command:
+
+```txt
+claude --print <prompt>
+```
+
+Problems:
+
+- One-shot only.
+- No persistent terminal session.
+- `stdin` ignored, so user cannot answer approvals/input.
+- No structured event timeline.
+- No saved run transcript.
+- No provider/mode/agent/skill metadata.
+- Stop uses `proc.kill()`, which may not kill child process tree reliably on Windows.
+
+### 2.4 Codex Runner Limitation
+
+File: `apps/bridge/src/ws/codex.ts`
+
+Current command:
+
+```txt
+codex -q <prompt>
+```
+
+Problems:
+
+- UI does not expose Codex runner.
+- Codex WS protocol returns raw strings, Claude WS returns JSON envelopes.
+- No shared run protocol.
+- No persistent PTY.
+- No saved transcript.
+- No approval/control channel.
+
+### 2.5 Graphify Current State
+
+Files:
+
+- `apps/bridge/src/routes/graphify.ts`
+- `apps/bridge/src/services/graphParser.ts`
+- `apps/bridge/src/ws/graphifyInstall.ts`
+
+Good:
+
+- Existing project graph exists.
+- Current graph has 251 nodes, 320 edges, 16 communities.
+- `graphify-out/graph.json`, `graph.html`, and `GRAPH_REPORT.md` exist.
+- Parser now can read `graph.json`.
+
+Current gaps:
+
+- Status labels are basic.
+- No graph stale detection.
+- No generate/update/watch buttons.
+- No native interactive graph canvas.
+- No query/path/explain graph UI.
+- No HTML preview endpoint.
+- No graph report viewer.
+
+### 2.6 Existing Graphify Report Insights
+
+Project graph communities:
+
+- Dashboard UI Pages
+- Session & Dream Engine
+- Bridge Server Core
+- Dashboard Dependencies
+- Bridge Dependencies
+- Graphify Integration
+- Runtime Configuration
+- Setup Page
+
+Current graph report also says several communities have low cohesion. This means future refactor should split large page/service responsibilities into focused modules.
+
+## 3. Transcript + Image Pattern Extraction
+
+### 3.1 Transcript 1 Pattern: Claude OS / AI OS Dashboard
+
+Main lesson: AI tools, models, memory, skills, subscriptions, and usage should not live in disconnected apps. They should flow into one visual intelligence system.
+
+Pillars extracted:
+
+- Models: Claude, Codex, Gemini, OpenAI, OpenRouter later
+- Plans/subscriptions: Claude Pro/Max, Codex/ChatGPT, API credits
+- Memory: local files, Obsidian, Pinecone/Supabase later
+- Skills: ECC skills, custom skills, unused/stale skills
+- Knowledge systems: Graphify, docs, repo graph, Obsidian notes
+- Connectors: GitHub, Notion, Telegram, browser, MCP servers
+- Usage/ROI: token usage, API-equivalent cost, time saved
+- Dream engine: daily recommendations from sessions, usage, skills, memory
+
+High-value ideas:
+
+- Show current 4-hour and weekly limit status.
+- Find repeated tasks and suggest creating skills.
+- Detect stale memories.
+- Detect expensive model misuse.
+- Show skills that save time and skills that are unused.
+- Show ROI using hourly rate and saved time estimate.
+- Build client-ready dashboard mode later.
+
+### 3.2 Transcript 2 Pattern: Obsidian Command Center
+
+Main lesson: command center should combine terminal workflow with visual observability.
+
+Useful ideas:
+
+- Integrated terminal
+- Visual reports
+- One-click automations
+- Skill shortcut buttons
+- Web viewer
+- Reports generated by automations
+- Obsidian-style vault structure
+- Raw / Wiki / Outputs pattern
+- Index files for navigation
+- Hot reload / pinned panes / dashboard widgets
+
+For our app:
+
+- We do not need to clone Obsidian.
+- We should use the same command-center principle:
+  - left: project/context
+  - center: terminal/agent session
+  - right: graph/skills/MCP/context
+  - bottom: logs/timeline/approvals
+
+### 3.3 Image Pattern
+
+Image shows “Claude OS” as center hub with connected pillars:
+
+- Connectors: Telegram, Notion
+- Models: Claude/OpenAI/NotebookLM/Supabase
+- Memory: Pinecone/Obsidian
+- Skills: tool workflows
+- Dream: recommendation engine
+- Data pipes between all modules
+
+Reusable product pattern: Agentic OS should have central hub architecture. Modules should not be isolated cards only; they should exchange data.
+
+## 4. Target Product Vision
+
+Rename or evolve `Coding` into:
+
+```txt
+Command Center
+```
+
+Command Center sub-tabs:
+
+- Terminal
+- Agents
+- Graphify
+- Skills
+- MCP
+- Sessions
+- Files
+- Insights
+
+Core promise:
+
+> Browser ke andar safe local AI coding cockpit jahan Claude Code, Codex, Graphify, ECC skills, MCP servers, sessions, memory, aur project intelligence ek jagah manage ho.
+
+## 5. Proposed UI Architecture
+
+### 5.1 Command Center Layout
+
+Recommended layout:
+
+- Top bar:
+  - active project
+  - provider: Claude / Codex / shell
+  - run mode: explore / plan / implement / review / terminal
+  - graphify status
+  - current agent state
+
+- Left panel:
+  - project registry
+  - project path
+  - git branch/status
+  - package manager
+  - framework detection
+  - graphify status
+
+- Center panel:
+  - xterm terminal
+  - prompt console
+  - active agent timeline
+
+- Right panel:
+  - agents
+  - skills
+  - MCP servers
+  - context pack
+  - graph nodes
+
+- Bottom drawer:
+  - stdout/stderr logs
+  - approval queue
+  - file changes
+  - run transcript
+
+### 5.2 Home Dashboard Additions
+
+Home should eventually show:
+
+- sessions today
+- tokens today
+- API-equivalent cost today
+- 4-hour Claude estimate
+- weekly Claude estimate
+- Codex rate-limit status
+- active project
+- active run/process
+- top used skills
+- stale memories
+- graphify stale/missing projects
+- dream recommendations
+- MCP health
+- skills installed vs used
+- model usage breakdown
+
+## 6. Project Registry
+
+Add a first-class project registry.
+
+### 6.1 DB Table
+
+```sql
+CREATE TABLE projects (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  path TEXT NOT NULL UNIQUE,
+  created_at INTEGER NOT NULL,
+  last_opened_at INTEGER,
+  framework TEXT,
+  package_manager TEXT,
+  git_branch TEXT,
+  graphify_status TEXT NOT NULL DEFAULT 'unknown'
+);
+```
+
+### 6.2 Features
+
+- Add project
+- Validate path
+- Detect framework
+- Detect package manager
+- Detect git branch/status
+- Detect Graphify files
+- Show recent projects
+- Filter sessions by project
+
+### 6.3 Safety
+
+Only allow project paths under configured allowed roots:
+
+- `projectsBasePath`
+- explicitly added trusted paths
+- current Agentic OS root
+
+Do not let browser run arbitrary cwd outside allowed roots.
+
+## 7. Real Terminal / PTY System
+
+This is highest priority for “proper vibe coding”.
+
+### 7.1 Why
+
+Current one-shot runner cannot:
+
+- answer prompts
+- handle approvals
+- show real terminal behavior
+- keep session alive
+- run shell commands interactively
+- recover from blocked process
+
+### 7.2 Existing Dependencies
+
+Already installed:
+
+- backend: `node-pty`
+- frontend: `xterm`
+- frontend: `xterm-addon-fit`
+- frontend: `xterm-addon-web-links`
+
+### 7.3 Backend WebSocket
+
+Add:
+
+```txt
+/ws/terminal
+```
+
+Message protocol:
+
+```ts
+type ClientMessage =
+  | { type: 'auth'; token: string; projectPath: string; provider: 'powershell' | 'claude' | 'codex' }
+  | { type: 'input'; data: string }
+  | { type: 'resize'; cols: number; rows: number }
+  | { type: 'kill' }
+```
+
+```ts
+type ServerMessage =
+  | { type: 'ready'; runId: string }
+  | { type: 'output'; data: string }
+  | { type: 'exit'; code: number | null }
+  | { type: 'error'; data: string }
+```
+
+### 7.4 Provider Commands
+
+Terminal tabs:
+
+- PowerShell:
+  - `powershell.exe`
+- Claude:
+  - `claude`
+- Codex:
+  - `codex`
+
+One-shot mode can still exist:
+
+- Claude one-shot: `claude --print`
+- Codex one-shot: `codex -q`
+
+But interactive terminal should be primary for real coding.
+
+### 7.5 Transcript Save
+
+Add DB tables:
+
+```sql
+CREATE TABLE agent_runs (
+  id TEXT PRIMARY KEY,
+  provider TEXT NOT NULL,
+  mode TEXT NOT NULL,
+  project_path TEXT NOT NULL,
+  prompt TEXT,
+  status TEXT NOT NULL,
+  started_at INTEGER NOT NULL,
+  ended_at INTEGER,
+  exit_code INTEGER,
+  transcript_path TEXT
+);
+
+CREATE TABLE run_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id TEXT NOT NULL,
+  ts INTEGER NOT NULL,
+  stream TEXT NOT NULL,
+  data TEXT NOT NULL
+);
+```
+
+Benefits:
+
+- Sessions can be replayed.
+- Output never disappears.
+- Dream engine can analyze failed runs.
+- Prompt history becomes searchable.
+
+## 8. Unified Agent Runner
+
+### 8.1 Current Problem
+
+Claude and Codex handlers are separate and inconsistent:
+
+- Claude sends JSON messages.
+- Codex sends raw text.
+- No shared run metadata.
+- No saved transcript.
+
+### 8.2 Proposed Abstraction
+
+Create:
+
+```txt
+apps/bridge/src/services/agentRunner.ts
+apps/bridge/src/ws/agentRun.ts
+```
+
+Provider config:
+
+```ts
+interface AgentProvider {
+  id: 'claude' | 'codex'
+  displayName: string
+  oneShotCommand: string
+  oneShotArgs(prompt: string): string[]
+  interactiveCommand: string
+  interactiveArgs: string[]
+}
+```
+
+Run modes:
+
+- `explore`: read-only prompt template
+- `plan`: plan-only prompt template
+- `implement`: code changes allowed inside project
+- `review`: review/diff prompt template
+- `terminal`: raw interactive terminal
+
+### 8.3 Event Timeline
+
+Store/derive events:
+
+- run_started
+- stdout
+- stderr
+- command_detected
+- file_edit_detected
+- error_detected
+- approval_needed
+- run_completed
+- run_failed
+- run_cancelled
+
+Even if Claude/Codex output is plain text, we can pattern-match basic events.
+
+## 9. Graphify Manager
+
+### 9.1 Status Model
+
+Statuses:
+
+- missing: no graphify files
+- partial: some files exist
+- ready: `graph.json` + `GRAPH_REPORT.md` exist
+- stale: source files newer than graph output
+- building: graph generation running
+- failed: last graph command failed
+
+### 9.2 Backend API
+
+Add endpoints:
+
+```txt
+GET  /api/graphify/status?projectPath=
+GET  /api/graphify/graph?projectPath=
+GET  /api/graphify/report?projectPath=
+GET  /api/graphify/html?projectPath=
+POST /api/graphify/build
+POST /api/graphify/update
+POST /api/graphify/query
+POST /api/graphify/path
+POST /api/graphify/explain
+```
+
+### 9.3 Graphify UI
+
+Panel features:
+
+- graph status card
+- generate graph button
+- update graph button
+- open graph.html
+- native graph view from `graph.json`
+- node search
+- filter by type/community
+- click node to inspect source file/path
+- top connected nodes
+- communities list
+- graph report tabs:
+  - God Nodes
+  - Surprising Connections
+  - Suggested Questions
+- query graph box
+- path finder: node A to node B
+
+### 9.4 Implementation Choice
+
+Primary renderer:
+
+- custom D3 graph from `graph.json`
+
+Fallback:
+
+- `graph.html` iframe/open button
+
+Reason: `graph.html` is useful, but native UI gives search/filter/project integration.
+
+## 10. Skills System
+
+### 10.1 Sources To Scan
+
+Scan:
+
+- `~/.agents/skills`
+- `~/.claude/skills`
+- `~/.claude/plugins/marketplaces/ecc/skills`
+- `~/.claude/plugins/marketplaces/ecc/.agents/skills`
+- `~/.codex/skills`
+- `~/.codex/prompts`
+- project `.agents/skills`
+- project `.claude/skills`
+
+### 10.2 DB Tables
+
+```sql
+CREATE TABLE skills (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  source TEXT NOT NULL,
+  path TEXT NOT NULL,
+  category TEXT,
+  installed_for_claude INTEGER NOT NULL DEFAULT 0,
+  installed_for_codex INTEGER NOT NULL DEFAULT 0,
+  last_seen_at INTEGER NOT NULL,
+  last_used_at INTEGER
+);
+
+CREATE TABLE skill_usage (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  skill_id TEXT NOT NULL,
+  run_id TEXT,
+  project_path TEXT,
+  used_at INTEGER NOT NULL
+);
+```
+
+### 10.3 UI
+
+Skills tab:
+
+- name
+- description
+- source
+- path
+- category
+- installed target
+- last used
+- favorite
+- attach to prompt
+- open file
+
+Filters:
+
+- daily coding
+- project relevant
+- ECC
+- custom
+- image/media
+- research
+- testing
+- security
+
+### 10.4 Best Skills To Surface First
+
+Daily coding:
+
+- `tdd-workflow`
+- `verification-loop`
+- `frontend-patterns`
+- `backend-patterns`
+- `api-design`
+- `security-review`
+- `e2e-testing`
+- `coding-standards`
+- `graphify`
+
+Agent OS:
+
+- `agent-introspection-debugging`
+- `continuous-learning-v2`
+- `iterative-retrieval`
+- `strategic-compact`
+- `skill-stocktake`
+- `configure-ecc`
+
+Utility:
+
+- `caveman`
+- `caveman-review`
+- `caveman-stats`
+
+## 11. Agents System
+
+### 11.1 Agent Sources
+
+Scan:
+
+- `~/.claude/agents`
+- `~/.codex/agents`
+- ECC repo `agents`
+- ECC `.codex/agents`
+- project `.agents`
+- project `.codex/agents`
+
+### 11.2 Agent Categories
+
+Recommended categories:
+
+- Explorer
+- Architect
+- Planner
+- Builder
+- Reviewer
+- Security
+- Testing
+- Docs
+- Database
+- Graph
+- Dream/Insights
+
+### 11.3 High-Priority Agents
+
+Surface as command-center buttons:
+
+- code explorer
+- architect
+- planner
+- tdd guide
+- code reviewer
+- security reviewer
+- build error resolver
+- TypeScript reviewer
+- database reviewer
+- e2e runner
+- harness optimizer
+- docs lookup
+
+### 11.4 UI
+
+Agents tab:
+
+- agent name
+- purpose
+- tools
+- model
+- source path
+- safe modes
+- best use
+- run button
+- attach to workflow
+
+## 12. MCP Manager
+
+### 12.1 Sources
+
+Read:
+
+- `~/.codex/config.toml`
+- project `.codex/config.toml`
+- project `.mcp.json`
+- Claude MCP config locations
+- ECC `mcp-configs/mcp-servers.json`
+
+### 12.2 UI
+
+MCP tab:
+
+- server name
+- command
+- args
+- env vars required
+- enabled/disabled
+- last checked
+- status: ok / missing env / command missing / disabled
+- target: Claude / Codex / project
+
+### 12.3 Safety
+
+Never print secret values. Show only:
+
+- env var name
+- present/missing
+
+## 13. Memory / Obsidian-Style Knowledge System
+
+### 13.1 Pattern
+
+Use Raw / Wiki / Outputs pattern:
+
+```txt
+knowledge/
+  raw/
+  wiki/
+  outputs/
+  indexes/
+```
+
+For each project:
+
+```txt
+.agentic-os/
+  raw/
+  wiki/
+  outputs/
+  indexes/
+  graphify/
+  sessions/
+```
+
+### 13.2 Features
+
+- project notes
+- generated plans
+- Graphify reports
+- session summaries
+- dream recommendations
+- skill creation ideas
+- indexes for navigation
+
+### 13.3 Dashboard UI
+
+Memory tab:
+
+- sources
+- stale files
+- recent updates
+- project wiki
+- outputs
+- raw captures
+- refresh button
+- summarize button
+
+## 14. Dream Engine Upgrade
+
+Current dream engine exists, but should become richer.
+
+### 14.1 Inputs
+
+- last 7 days sessions
+- agent runs
+- prompt history
+- token/cost usage
+- graphify status
+- skills installed/used
+- memory freshness
+- failed builds/runs
+- repeated user tasks
+- MCP health
+
+### 14.2 Output Recommendation Schema
+
+```ts
+interface DreamRecommendation {
+  id: string
+  type: 'skill' | 'cost' | 'memory' | 'graphify' | 'workflow' | 'security' | 'project'
+  title: string
+  evidence: string[]
+  reason: string
+  suggestedAction: string
+  estimatedMinutesSaved: number
+  projectPath?: string
+  relatedSkill?: string
+  status: 'pending' | 'applied' | 'skipped'
+}
+```
+
+### 14.3 Example Recommendations
+
+- “Same auth debugging repeated 3 times. Create `auth-debugging` skill.”
+- “Graphify stale by 9 days. Update project graph.”
+- “Claude used for simple lint fixes. Codex/local script could handle this.”
+- “Memory file outdated. Refresh project context.”
+- “Project has no security-review run in 14 days.”
+
+## 15. Usage / ROI Layer
+
+### 15.1 Current
+
+The app already stores:
+
+- sessions
+- tokens
+- cost estimate
+- hourly rate in config
+
+### 15.2 Add
+
+- skill usage count
+- automation runs
+- estimated manual minutes saved
+- API-equivalent cost
+- net value estimate
+
+### 15.3 ROI Formula
+
+```txt
+estimated_value = saved_minutes / 60 * hourly_rate
+net_roi = estimated_value - api_equivalent_cost
+```
+
+This is an estimate. UI should label it clearly.
+
+## 16. Security Model
+
+This is the highest-risk area because dashboard can run local commands.
+
+### 16.1 Required Protections
+
+- Auth token required for every API/WS.
+- Allowed project roots only.
+- Validate `projectPath`.
+- No arbitrary cwd outside trusted roots.
+- Separate modes:
+  - explore
+  - plan
+  - review
+  - implement
+  - terminal
+- Destructive actions require confirmation.
+- Save all run logs.
+- Process timeout.
+- Process tree kill.
+- Audit log table.
+
+### 16.2 Dangerous Actions
+
+Confirm before:
+
+- recursive delete
+- git reset/checkout/clean
+- git push
+- package install
+- deploy
+- env/secret changes
+- moving files outside project
+
+### 16.3 Audit Log
+
+```sql
+CREATE TABLE audit_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  actor TEXT NOT NULL,
+  project_path TEXT,
+  detail_json TEXT NOT NULL
+);
+```
+
+## 17. Implementation Phases
+
+### Phase 1: Command Center Foundation
+
+Goal: coding page ko reliable browser terminal + runner dashboard banana.
+
+Tasks:
+
+- Add unified WebSocket message protocol.
+- Add `agent_runs` and `run_logs` tables.
+- Add `/ws/terminal` using `node-pty`.
+- Add xterm.js component in dashboard.
+- Add provider selector: PowerShell / Claude / Codex.
+- Save transcripts.
+- Add run status and stop/restart.
+
+Acceptance:
+
+- Browser terminal opens in selected project.
+- User can type commands.
+- Claude/Codex interactive session can run.
+- Output streams live.
+- Transcript saved in DB.
+
+### Phase 2: Project Registry
+
+Goal: project load ko real managed workspace banana.
+
+Tasks:
+
+- Add `projects` table.
+- Add project create/list/update endpoints.
+- Detect framework/package manager/git.
+- Validate paths.
+- Add recent projects UI.
+
+Acceptance:
+
+- User can add project once.
+- Project appears in sidebar/dropdown.
+- Sessions and graphify can filter by project.
+
+### Phase 3: Graphify Manager
+
+Goal: Graphify ko first-class project brain map banana.
+
+Tasks:
+
+- Add status endpoint.
+- Add build/update endpoints.
+- Add report/html endpoints.
+- Add native graph viewer.
+- Add search/filter/community panel.
+- Add stale detection.
+
+Acceptance:
+
+- Missing graph shows generate button.
+- Existing graph shows native graph + stats.
+- Stale graph shows update button.
+- `graph.html` can open/view.
+
+### Phase 4: ECC Catalog
+
+Goal: agents/skills/commands/rules ko dashboard me browse and attach karna.
+
+Tasks:
+
+- Add scanner service for skills/agents/commands/rules.
+- Parse frontmatter.
+- Store/update catalog in DB.
+- Add Agents tab.
+- Add Skills tab.
+- Add command/workflow shortcuts.
+
+Acceptance:
+
+- ECC agents visible.
+- ECC skills visible.
+- User can attach skill/agent to prompt template.
+
+### Phase 5: MCP Manager
+
+Goal: MCP visibility.
+
+Tasks:
+
+- Parse Codex config.
+- Parse project MCP config.
+- Parse ECC MCP catalog.
+- Show status and missing env vars.
+
+Acceptance:
+
+- MCP servers listed.
+- Missing env warnings shown without leaking secrets.
+
+### Phase 6: Agent Timeline + Approvals
+
+Goal: live “agent kya kar raha hai” view.
+
+Tasks:
+
+- Parse output chunks into basic events.
+- Show timeline.
+- Add approval queue UI.
+- Add file-change summary.
+- Add run replay.
+
+Acceptance:
+
+- User sees live event timeline, not only raw output.
+- Run history can be reopened.
+
+### Phase 7: Dream Engine v2
+
+Goal: OS self-improvement.
+
+Tasks:
+
+- Analyze agent runs + sessions + skills + graphify.
+- Detect repeated tasks.
+- Detect stale graphs/memories.
+- Suggest skills/automations.
+- Estimate ROI.
+
+Acceptance:
+
+- Dream tab produces actionable recommendations with evidence.
+
+## 18. Suggested File Structure For Implementation
+
+Backend:
+
+```txt
+apps/bridge/src/services/
+  agentRunner.ts
+  terminalSession.ts
+  projectRegistry.ts
+  catalogScanner.ts
+  mcpScanner.ts
+  graphifyManager.ts
+
+apps/bridge/src/routes/
+  projects.ts
+  catalog.ts
+  mcp.ts
+
+apps/bridge/src/ws/
+  terminal.ts
+  agentRun.ts
+```
+
+Frontend:
+
+```txt
+apps/dashboard/src/app/coding/
+  page.tsx
+
+apps/dashboard/src/components/coding/
+  CommandCenterShell.tsx
+  ProjectPanel.tsx
+  TerminalPane.tsx
+  PromptConsole.tsx
+  AgentTimeline.tsx
+  GraphifyPanel.tsx
+  SkillsPanel.tsx
+  AgentsPanel.tsx
+  McpPanel.tsx
+  RunHistoryPanel.tsx
+```
+
+## 19. Recommended Immediate Next Step
+
+Build Phase 1 first:
+
+1. DB tables: `agent_runs`, `run_logs`
+2. Backend `/ws/terminal` with `node-pty`
+3. Frontend `TerminalPane` with `xterm`
+4. Provider selector: PowerShell / Claude / Codex
+5. Transcript persistence
+6. Run stop/restart
+
+Why first:
+
+- This directly fixes “prompt chalta rehta hai, output unreliable” problem.
+- This unlocks browser-based terminal control.
+- It gives foundation for Claude/Codex/Gemini later.
+- Graphify/skills/MCP panels can then attach to real active run.
+
+## 20. Final Product Direction
+
+Agentic OS ka final shape:
+
+- Central hub like image concept.
+- Live command center like Obsidian transcript.
+- AI intelligence dashboard like Claude OS transcript.
+- Graphify-native project brain.
+- ECC-powered skills and agents.
+- Claude + Codex first.
+- Gemini later as third provider/reviewer.
+- Dream engine for automatic improvement.
+
+Final motto:
+
+```txt
+One place to run agents, see context, manage skills, inspect graphs, track cost, and improve workflows.
+```
+
